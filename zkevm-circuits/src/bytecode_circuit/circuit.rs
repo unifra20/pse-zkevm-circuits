@@ -5,12 +5,12 @@ use chiquito::{
     ast::{query::Queriable, Expr, ToExpr, ToField},
     compiler::{
         cell_manager::SingleRowCellManager, step_selector::SimpleStepSelectorBuilder, Circuit,
-        Compiler, WitnessGenContext, FixedGenContext, TraceContext,
+        Compiler, WitnessGenContext, FixedGenContext,
     },
     dsl::{circuit, StepTypeContext}, backend::halo2::{ChiquitoHalo2, chiquito2Halo2},
 };
 
-use eth_types::{Field, Word, ToLittleEndian};
+use eth_types::{Field};
 use halo2_proofs::{
     circuit::{Layouter, SimpleFloorPlanner, Value},
     halo2curves::{bn256::Fr, FieldExt},
@@ -295,13 +295,7 @@ impl<F: Field> BytecodeCircuitConfig<F> {
 
         let compiler = Compiler::new(SingleRowCellManager {}, SimpleStepSelectorBuilder {});
 
-        let compiled = compiler.compile(&mut bytecode_circuit);
-
-        // println!("{:#?}", bytecode_circuit);
-
-        // println!("{:#?}", compiled);
-
-        compiled
+        compiler.compile(&mut bytecode_circuit)
     }
 
     fn circuit_push_data_table(push_data_value: Column<Fixed>, push_data_size: Column<Fixed>) -> Circuit<F, (), ()> {
@@ -320,13 +314,7 @@ impl<F: Field> BytecodeCircuitConfig<F> {
 
         let compiler = Compiler::new(SingleRowCellManager {}, SimpleStepSelectorBuilder {});
 
-        let compiled = compiler.compile(&mut push_data_table_circuit);
-
-        // println!("{:#?}", push_data_table_circuit);
-
-        // println!("{:#?}", compiled);
-
-        compiled
+        compiler.compile(&mut push_data_table_circuit)
     }
 }
 
@@ -377,11 +365,6 @@ impl<F: Field> SubCircuit<F> for BytecodeCircuit<F> {
         challenges: &Challenges<Value<F>>,
         layouter: &mut impl Layouter<F>,
     ) -> Result<(), Error> {
-        // config.load_aux_tables(layouter)?;
-        // config.assign_internal(layouter, self.size, &self.bytecodes, challenges, false)
-
-        // println!("{:?}", self.bytecodes.clone());
-
         config.push_data_table.synthesize(layouter, ());
         config.compiled.synthesize(layouter, (self.bytecodes.clone(), *challenges, self.size - (config.minimum_rows + 1)));
 
