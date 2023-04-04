@@ -28,7 +28,7 @@ use rand_xorshift::XorShiftRng;
 use std::{collections::HashMap, marker::PhantomData, sync::Mutex};
 use tokio::sync::Mutex as TokioMutex;
 use zkevm_circuits::{
-    bytecode_circuit::circuit::BytecodeCircuit,
+    bytecode_circuit::ccircuit::BytecodeCircuit,
     copy_circuit::CopyCircuit,
     evm_circuit::EvmCircuit,
     exp_circuit::ExpCircuit,
